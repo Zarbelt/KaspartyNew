@@ -166,7 +166,7 @@ export default function TokenLeaderboard() {
                   rel="noopener noreferrer"
                   className="text-kasgreen hover:underline"
                 >
-                  CoinGecko Kaspa Ecosystem
+                  Powerewd by Modmedia Network 
                 </a>
               </p>
             </div>
