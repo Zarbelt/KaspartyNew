@@ -15,7 +15,9 @@ interface SearchResult {
 
 interface QuickSearch {
   term: string
-  icon: JSX.Element
+  icon: React.ReactNode
+
+
   description: string
 }
 
@@ -128,7 +130,6 @@ const SEARCH_ENGINE_ID = import.meta.env.VITE_GOOGLE_SEARCH_ENGINE_ID
         setResults(formattedResults)
         setTotalResults(data.searchInformation?.formattedTotalResults || '0')
       } else {
-        // Fallback to mock data if no results
         setResults(getMockResults(q))
         setTotalResults('1,000+')
       }
