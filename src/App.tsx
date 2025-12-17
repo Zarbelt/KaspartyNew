@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Hero from './components/Hero'
@@ -20,7 +19,7 @@ function App() {
   }, [darkMode])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:to-black transition-all duration-500">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:to-black transition-all duration-500 overflow-x-hidden">
       <Header darkMode={darkMode} setDarkMode={setDarkMode} />
       <Hero />
       <SearchSection />

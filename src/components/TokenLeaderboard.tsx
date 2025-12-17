@@ -43,72 +43,122 @@ export default function TokenLeaderboard() {
     return `$${value.toFixed(6)}`
   }
 
+  const formatUsdMobile = (value: number | null) => {
+    if (value === null || value === undefined) return '-'
+    if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`
+    if (value >= 1_000) return `$${(value / 1_000).toFixed(1)}K`
+    if (value >= 1) return `$${value.toFixed(2)}`
+    return `$${value.toFixed(4)}`
+  }
+
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-100 dark:from-gray-800 dark:to-black">
-      <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center mb-12">
+    <section className="py-12 md:py-20 bg-gradient-to-b from-white to-gray-100 dark:from-gray-800 dark:to-black">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 px-4 md:px-0">
           Live Top 10 Kaspa Ecosystem Tokens (KRC-20)
         </h2>
 
         {loading && (
-          <div className="text-center text-2xl text-gray-600 dark:text-gray-300">
+          <div className="text-center text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300">
             Loading live data from CoinGecko...
           </div>
         )}
 
         {error && (
-          <div className="text-center text-red-600 dark:text-red-400 text-xl">
+          <div className="text-center text-red-600 dark:text-red-400 text-base sm:text-lg md:text-xl px-4">
             {error}
           </div>
         )}
 
         {!loading && !error && tokens.length > 0 && (
-          <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-kasgreen text-white">
-                <tr>
-                  <th className="p-6 text-left">Rank</th>
-                  <th className="p-6 text-left">Token</th>
-                  <th className="p-6 text-right">Price</th>
-                  <th className="p-6 text-right">Market Cap</th>
-                  <th className="p-6 text-right">24h Volume</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tokens.map((t, i) => (
-                  <tr
-                    key={t.symbol}
-                    className="border-b dark:border-gray-700 hover:bg-kasgreen/5 transition"
-                  >
-                    <td className="p-6 font-bold">{i + 1}</td>
-                    <td className="p-6">
-                      <div>
-                        <span className="font-semibold text-kasgreen uppercase">
-                          {t.symbol}
-                        </span>
-                        {t.name && (
-                          <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">
-                            ({t.name})
+          <>
+            {/* Desktop Table */}
+            <div className="hidden md:block bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-kasgreen text-white">
+                  <tr>
+                    <th className="p-6 text-left">Rank</th>
+                    <th className="p-6 text-left">Token</th>
+                    <th className="p-6 text-right">Price</th>
+                    <th className="p-6 text-right">Market Cap</th>
+                    <th className="p-6 text-right">24h Volume</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tokens.map((t, i) => (
+                    <tr
+                      key={t.symbol}
+                      className="border-b dark:border-gray-700 hover:bg-kasgreen/5 transition"
+                    >
+                      <td className="p-6 font-bold">{i + 1}</td>
+                      <td className="p-6">
+                        <div>
+                          <span className="font-semibold text-kasgreen uppercase">
+                            {t.symbol}
                           </span>
+                          {t.name && (
+                            <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">
+                              ({t.name})
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-6 text-right font-medium">
+                        {formatUsd(t.current_price)}
+                      </td>
+                      <td className="p-6 text-right font-medium">
+                        {formatUsd(t.market_cap)}
+                      </td>
+                      <td className="p-6 text-right font-medium">
+                        {formatUsd(t.total_volume)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden space-y-4">
+              {tokens.map((t, i) => (
+                <div 
+                  key={t.symbol}
+                  className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-4 hover:shadow-xl transition-shadow"
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="font-bold text-lg text-kasgreen">#{i + 1}</span>
+                      <div>
+                        <div className="font-semibold text-kasgreen uppercase">
+                          {t.symbol}
+                        </div>
+                        {t.name && (
+                          <div className="text-xs text-gray-600 dark:text-gray-400">
+                            {t.name}
+                          </div>
                         )}
                       </div>
-                    </td>
-                    <td className="p-6 text-right font-medium">
-                      {formatUsd(t.current_price)}
-                    </td>
-                    <td className="p-6 text-right font-medium">
-                      {formatUsd(t.market_cap)}
-                    </td>
-                    <td className="p-6 text-right font-medium">
-                      {formatUsd(t.total_volume)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                    <div className="text-right font-bold text-lg">
+                      {formatUsdMobile(t.current_price)}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">Market Cap</div>
+                      <div className="font-medium">{formatUsdMobile(t.market_cap)}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">24h Volume</div>
+                      <div className="font-medium">{formatUsdMobile(t.total_volume)}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-            <div className="p-8 bg-kasgreen/10 text-center">
-              <p className="text-lg font-semibold">
+            <div className="p-6 md:p-8 bg-kasgreen/10 text-center rounded-2xl md:rounded-3xl mt-8">
+              <p className="text-sm sm:text-base md:text-lg font-semibold">
                 Live data powered by{' '}
                 <a
                   href="https://www.coingecko.com/en/categories/kaspa-ecosystem"
@@ -120,7 +170,7 @@ export default function TokenLeaderboard() {
                 </a>
               </p>
             </div>
-          </div>
+          </>
         )}
       </div>
     </section>
