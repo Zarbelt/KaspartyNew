@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, type JSX } from 'react'
 import { Search, X, Globe, ExternalLink, Clock, ChevronRight, Zap, Shield, Cpu, Sparkles, Loader2, TrendingUp } from 'lucide-react'
 
 interface SearchResult {

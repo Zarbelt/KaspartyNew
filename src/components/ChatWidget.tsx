@@ -42,8 +42,8 @@ export default function ChatWidget() {
   const [connectedUsers, setConnectedUsers] = useState<UserStatus[]>([])
   const [hasMore, setHasMore] = useState(true)
   const [page, setPage] = useState(0)
-  const [typing, setTyping] = useState(false)
-  const [typingUsers, setTypingUsers] = useState<string[]>([])
+  const [, setTyping] = useState(false)
+  const [typingUsers, ] = useState<string[]>([])
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'connecting' | 'disconnected'>('disconnected')
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
