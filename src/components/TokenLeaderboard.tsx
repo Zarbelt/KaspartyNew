@@ -65,7 +65,7 @@ export default function TokenLeaderboard() {
 
         {loading && (
           <div className="text-center text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300">
-            Loading live data from CoinGecko...
+            Loading live data from Modmedia...
           </div>
         )}
 
@@ -171,7 +171,7 @@ export default function TokenLeaderboard() {
                   rel="noopener noreferrer"
                   className="text-kasgreen hover:underline"
                 >
-                  CoinGecko
+                  Modmedia
                 </a>
               </p>
             </div>
