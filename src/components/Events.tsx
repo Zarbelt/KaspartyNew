@@ -1,3 +1,11 @@
+import { useEffect, useState } from "react";
+
+interface Milestone {
+  label: string;
+  value: string;
+  change?: string;
+}
+
 export default function Events() {
   const events = [
     {
@@ -60,14 +68,71 @@ export default function Events() {
       tags: ["DeFi", "DEX", "Yield"],
       icon: "💎",
     },
-  ]
+  ];
 
-  const milestones = [
-    { label: "Blocks Per Second", value: "10 BPS", change: "+2.5x" },
-    { label: "Network Nodes", value: "15K+", change: "+45%" },
-    { label: "Transaction Speed", value: "<1s", change: "-60%" },
-    { label: "Energy Efficiency", value: "98%", change: "+40%" },
-  ]
+  const [milestones, setMilestones] = useState<Milestone[]>([
+    { label: "Transactions Per Second", value: "Loading...", change: undefined },
+    { label: "Blocks Per Second", value: "Loading...", change: undefined },
+    { label: "Network Nodes", value: "Loading...", change: undefined },
+    { label: "Network Hashrate", value: "Loading...", change: undefined },
+    { label: "Active Miners", value: "Loading...", change: "Recently seen" },
+    { label: "Circulating Supply", value: "Loading...", change: undefined },
+    { label: "Current Block Reward", value: "Loading...", change: undefined },
+    { label: "More Energy Efficient than Bitcoin", value: "Loading...", change: undefined },
+  ]);
+
+  useEffect(() => {
+    fetch("https://kaspa.stream/")
+      .then((res) => res.text())
+      .then((html) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        const getText = (selector: string): string => {
+          const el = doc.querySelector(selector);
+          return el?.textContent?.trim() || "";
+        };
+
+        const tps = getText('[data-testid="tps"] .text-3xl') || "12";
+
+        const bps = getText('[data-testid="bps"] .text-3xl') || "10.7";
+
+        const nodes = getText('[data-testid="nodes"] .text-3xl') || "865";
+
+        const hashrate = getText('[data-testid="hashrate"] .text-3xl') || "489.3 PH/s";
+
+        const miners = getText('[data-testid="miners"] .text-3xl') || "246";
+
+        const circulating = getText('[data-testid="circulating"] .text-3xl') || "27.03B";
+        const minedPct = getText('[data-testid="circulating"] .text-sm:nth-of-type(2)')?.replace("Mined:", "").trim() || "94.16%";
+
+        const rewardCurrent = getText('[data-testid="reward"] .text-3xl') || "3.67";
+        const rewardNext = getText('[data-testid="reward"] .text-sm:nth-of-type(2)')?.replace("Next reduction ", "").split(" ")[1] || "3.46";
+
+        setMilestones([
+          { label: "Transactions Per Second", value: `${tps} TPS`, change: undefined },
+          { label: "Blocks Per Second", value: `${bps} BPS`, change: undefined },
+          { label: "Network Nodes", value: nodes, change: undefined },
+          { label: "Network Hashrate", value: hashrate, change: undefined },
+          { label: "Active Miners", value: miners, change: "" },
+          { label: "Circulating Supply", value: circulating, change: minedPct },
+          { label: "Current Block Reward", value: `𐤊 ${rewardCurrent}`, change: `Next: 𐤊 ${rewardNext}` },
+          { label: "More Energy Efficient than Bitcoin", value: "99%+", change: undefined },
+        ]);
+      })
+      .catch(() => {
+        setMilestones([
+          { label: "Transactions Per Second", value: "12 TPS", change: undefined },
+          { label: "Blocks Per Second", value: "10.7 BPS", change: undefined },
+          { label: "Network Nodes", value: "865", change: undefined },
+          { label: "Network Hashrate", value: "489.3 PH/s", change: undefined },
+          { label: "Active Miners", value: "246", change: "Recently seen" },
+          { label: "Circulating Supply", value: "27.03B", change: "94.16%" },
+          { label: "Current Block Reward", value: "𐤊 3.67", change: "Next: 𐤊 3.46" },
+          { label: "More Energy Efficient than Bitcoin", value: "99%+", change: undefined },
+        ]);
+      });
+  }, []);
 
   return (
     <section className="relative py-16 md:py-32 bg-gradient-to-br from-gray-900 via-black to-purple-900 overflow-hidden">
@@ -90,41 +155,40 @@ export default function Events() {
             Roadmap & Events
           </h2>
           <p className="text-base md:text-xl text-gray-300 max-w-3xl mx-auto px-4 md:px-0">
-            Follow Kaspa's journey through groundbreaking updates and future
-            milestones
+            Follow Kaspa's journey through groundbreaking updates and future milestones
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12 md:mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4 md:gap-6 mb-12 md:mb-16">
           {milestones.map((m, i) => (
             <div
               key={i}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-lg rounded-xl md:rounded-2xl p-4 md:p-6 border border-gray-700/50 hover:border-blue-500/30 transition"
+              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-lg rounded-xl md:rounded-2xl p-4 md:p-6 border border-gray-700/50 hover:border-blue-500/30 transition text-center"
             >
               <div className="text-2xl md:text-3xl font-bold text-white mb-2">
                 {m.value}
               </div>
               <div className="text-gray-400 text-xs md:text-sm mb-1">{m.label}</div>
-              <div className="text-green-400 text-xs md:text-sm font-medium">
-                ↑ {m.change}
-              </div>
+              {m.change && (
+                <div className="text-green-400 text-xs md:text-sm font-medium">
+                  {m.change}
+                </div>
+              )}
             </div>
           ))}
         </div>
 
         <div className="space-y-12 md:space-y-16">
           {events.map((event, index) => {
-            const parts = event.date.split(" ")
-            const year = parts.pop()
-            const month = parts.join(" ")
+            const parts = event.date.split(" ");
+            const year = parts.pop();
+            const month = parts.join(" ");
 
             return (
               <div
                 key={index}
                 className={`flex flex-col ${
-                  index % 2 === 0
-                    ? "lg:flex-row"
-                    : "lg:flex-row-reverse"
+                  index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
                 } items-center gap-6 md:gap-10`}
               >
                 <div className="flex-1 text-center lg:text-left px-4 md:px-0">
@@ -159,10 +223,10 @@ export default function Events() {
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </div>
     </section>
-  )
+  );
 }

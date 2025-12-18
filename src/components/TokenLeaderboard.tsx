@@ -1,5 +1,3 @@
-// src/components/TokenLeaderboard.tsx
-
 import { useState, useEffect } from 'react'
 
 interface Token {
@@ -35,21 +33,28 @@ export default function TokenLeaderboard() {
     fetchTokens()
   }, [])
 
-  const formatUsd = (value: number | null) => {
-    if (value === null || value === undefined) return '-'
+  const formatUsdDynamic = (value: number | null, maxDecimals = 12): string => {
+    if (value === null || value === undefined || value === 0) return '-'
+
     if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(2)}M`
     if (value >= 1_000) return `$${(value / 1_000).toFixed(2)}K`
     if (value >= 1) return `$${value.toFixed(2)}`
-    return `$${value.toFixed(6)}`
+
+  
+    let decimals = 2
+    let formatted = value.toFixed(decimals)
+
+    while (decimals <= maxDecimals && parseFloat(formatted) === 0) {
+      decimals += 1
+      formatted = value.toFixed(decimals)
+    }
+
+    
+    return `$${formatted.replace(/0+$/, '')}`
   }
 
-  const formatUsdMobile = (value: number | null) => {
-    if (value === null || value === undefined) return '-'
-    if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`
-    if (value >= 1_000) return `$${(value / 1_000).toFixed(1)}K`
-    if (value >= 1) return `$${value.toFixed(2)}`
-    return `$${value.toFixed(4)}`
-  }
+  const formatUsd = (value: number | null) => formatUsdDynamic(value, 12)
+  const formatUsdMobile = (value: number | null) => formatUsdDynamic(value, 10)
 
   return (
     <section className="py-12 md:py-20 bg-gradient-to-b from-white to-gray-100 dark:from-gray-800 dark:to-black">
@@ -72,7 +77,7 @@ export default function TokenLeaderboard() {
 
         {!loading && !error && tokens.length > 0 && (
           <>
-            {/* Desktop Table */}
+            
             <div className="hidden md:block bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden">
               <table className="w-full">
                 <thead className="bg-kasgreen text-white">
@@ -166,7 +171,7 @@ export default function TokenLeaderboard() {
                   rel="noopener noreferrer"
                   className="text-kasgreen hover:underline"
                 >
-                  Powerewd by Modmedia Network 
+                  CoinGecko
                 </a>
               </p>
             </div>
