@@ -117,7 +117,7 @@ export default function Events() {
           { label: "Active Miners", value: miners, change: "" },
           { label: "Circulating Supply", value: circulating, change: minedPct },
           { label: "Current Block Reward", value: `𐤊 ${rewardCurrent}`, change: `Next: 𐤊 ${rewardNext}` },
-          { label: "More Energy Efficient than Bitcoin", value: "99%+", change: undefined },
+          { label: "More Energy Efficient than Bitcoin", value: "100k%", change: undefined },
         ]);
       })
       .catch(() => {
@@ -129,7 +129,7 @@ export default function Events() {
           { label: "Active Miners", value: "246", change: "Recently seen" },
           { label: "Circulating Supply", value: "27.03B", change: "94.16%" },
           { label: "Current Block Reward", value: "𐤊 3.67", change: "Next: 𐤊 3.46" },
-          { label: "More Energy Efficient than Bitcoin", value: "99%+", change: undefined },
+          { label: "More Energy Efficient than Bitcoin", value: "100k%", change: undefined },
         ]);
       });
   }, []);

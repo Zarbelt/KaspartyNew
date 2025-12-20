@@ -319,8 +319,8 @@ export default function SearchSection() {
                     <span className="hidden md:inline">•</span>
                     <span className="flex items-center gap-1">
                       <Globe size={12} />
-                      <span className="hidden sm:inline">Powered by Google Custom Search</span>
-                      <span className="sm:hidden">Google Search</span>
+                      <span className="hidden sm:inline">Powered by Modmedia Search</span>
+                      <span className="sm:hidden">Modmedia Search</span>
                     </span>
                   </div>
                 </div>
@@ -482,10 +482,10 @@ export default function SearchSection() {
                     </div>
                   </div>
                   <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-3 md:mb-4">
-                    Powered by Google Custom Search JSON API with real-time web indexing and Kaspa-specific optimization.
+                    Powered by Modmedia Labs with real-time web indexing and Kaspa-specific optimization.
                   </p>
                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                    100 free queries/day available
+                    100 free Searches/day available
                   </div>
                 </div>
               </div>
@@ -551,7 +551,7 @@ export default function SearchSection() {
                   </div>
                   <div className="text-center">
                     <div className="text-lg md:text-2xl font-bold text-amber-700 dark:text-amber-400">Staking</div>
-                    <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Rewards System</div>
+                    <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">In Developement</div>
                   </div>
                   <div className="text-center">
                     <div className="text-lg md:text-2xl font-bold text-amber-700 dark:text-amber-400">Ecosystem</div>
