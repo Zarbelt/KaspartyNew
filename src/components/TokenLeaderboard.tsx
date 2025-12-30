@@ -166,7 +166,7 @@ export default function TokenLeaderboard() {
               <p className="text-sm sm:text-base md:text-lg font-semibold">
                 Live data powered by{' '}
                 <a
-                  href="https://www.coingecko.com/en/categories/kaspa-ecosystem"
+                  href="https://www.modmedianow.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-kasgreen hover:underline"
