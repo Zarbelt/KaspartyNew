@@ -93,7 +93,7 @@ export default function Events() {
           return el?.textContent?.trim() || "";
         };
 
-        const tps = getText('[data-testid="tps"] .text-3xl') || "12";
+        const tps = getText('[data-testid="tps"] .text-3xl') || "3000";
 
         const bps = getText('[data-testid="bps"] .text-3xl') || "10.7";
 
@@ -122,7 +122,7 @@ export default function Events() {
       })
       .catch(() => {
         setMilestones([
-          { label: "Transactions Per Second", value: "12 TPS", change: undefined },
+          { label: "Transactions Per Second", value: "3000 TPS", change: undefined },
           { label: "Blocks Per Second", value: "10.7 BPS", change: undefined },
           { label: "Network Nodes", value: "865", change: undefined },
           { label: "Network Hashrate", value: "489.3 PH/s", change: undefined },
