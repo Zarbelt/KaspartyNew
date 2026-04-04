@@ -4,6 +4,7 @@ import Hero from './components/Hero'
 import SearchSection from './components/SearchSection'
 import TokenLeaderboard from './components/TokenLeaderboard'
 import Events from './components/Events'
+import Forums from './components/Forums'
 import ChatWidget from './components/ChatWidget'
 import Footer from './components/Footer'
 
@@ -25,6 +26,7 @@ function App() {
       <SearchSection />
       <TokenLeaderboard />
       <Events />
+      <Forums />
       <Footer />
       <ChatWidget />
     </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { supabase } from '../supabaseClient'
-import { X, Maximize2, Minimize2, Send, Wallet, MessageSquare, User, Loader2, ExternalLink, RefreshCw } from 'lucide-react'
+import { X, Maximize2, Minimize2, Send, Wallet, MessageSquare, User, Loader2, ExternalLink, RefreshCw, Wifi } from 'lucide-react'
 
 declare global {
   interface Window {
@@ -401,7 +401,7 @@ export default function ChatWidget() {
                     Connect your Kasware wallet to join the conversation
                   </p>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Minimum 1 KAS required to prevent spam
+                    Minimum 1 KAS balance required to verify human — no fees charged
                   </p>
                 </div>
                 
@@ -427,8 +427,8 @@ export default function ChatWidget() {
 
                 <div className="grid grid-cols-3 gap-4 w-full max-w-sm">
                   <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                    <div className="text-2xl font-bold text-kasgreen">50+</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Active Users</div>
+                    <div className="flex justify-center text-kasgreen"><Wifi size={24} /></div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Active</div>
                   </div>
                   <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
                     <div className="text-2xl font-bold text-kasgreen">24/7</div>

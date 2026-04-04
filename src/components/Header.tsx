@@ -24,6 +24,12 @@ export default function Header({ darkMode, setDarkMode }: Props) {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6">
           <a 
+            href="#forums"
+            className="text-white hover:text-gray-200 transition font-medium"
+          >
+            Forums
+          </a>
+          <a 
             href="https://kaspa.org" 
             target="_blank" 
             rel="noopener noreferrer"
@@ -46,6 +52,14 @@ export default function Header({ darkMode, setDarkMode }: Props) {
             className="text-white hover:text-gray-200 transition"
           >
             KRC20
+          </a>
+          <a
+            href="https://kasmail.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white border border-white/40 hover:bg-white/10 transition px-3 py-1.5 rounded-lg text-sm font-semibold"
+          >
+            Kasmail.org
           </a>
           <button 
             onClick={() => setDarkMode(!darkMode)} 
@@ -79,6 +93,13 @@ export default function Header({ darkMode, setDarkMode }: Props) {
       {isMenuOpen && (
         <div className="md:hidden bg-kasgreen border-t border-green-600 px-4 py-4">
           <div className="flex flex-col gap-4">
+            <a
+              href="#forums"
+              className="text-white hover:text-gray-200 transition py-2 font-medium"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Forums
+            </a>
             <a 
               href="https://kaspa.org" 
               target="_blank" 
@@ -105,6 +126,15 @@ export default function Header({ darkMode, setDarkMode }: Props) {
               onClick={() => setIsMenuOpen(false)}
             >
               KRC20
+            </a>
+            <a
+              href="https://kasmail.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-gray-200 transition py-2 font-semibold"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Kasmail.org
             </a>
           </div>
         </div>
