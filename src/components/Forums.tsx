@@ -8,61 +8,41 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_ANON_KEY as string
 )
 
-// ─── Email via rapid-worker edge function ─────────────────────────────────
-const SEND_FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/rapid-worker`
-
+// ─── Deliver verification code directly into the recipient's KasMail inbox ──
+// rapid-worker is for outbound external emails — for internal KasMail users
+// we insert straight into the emails table so the body is always correct.
 async function sendVerificationEmail(to: string, code: string, type: 'register' | 'login' | 'resend'): Promise<void> {
-  const subject = type === 'login'
-    ? 'Kasparty Forums - Sign-in code'
-    : 'Kasparty Forums - Your verification code'
-  const body =
-    `Kasparty Forums Verification\n\nYour ${type === 'login' ? 'sign-in' : 'verification'} code is:\n\n${code}\n\nExpires in 10 minutes. Do not share it.`
-
   const username = to.split('@')[0]
+  const subject = type === 'login'
+    ? 'Kasparty Forums — Sign-in code'
+    : 'Kasparty Forums — Your verification code'
+  const body =
+    `Kasparty Forums Verification\n\nYour ${type === 'login' ? 'sign-in' : 'verification'} code is:\n\n${code}\n\nThis code expires in 10 minutes. Do not share it with anyone.`
 
-  // Look up the recipient's wallet address so we can write directly to their inbox
-  const { data: profile } = await supabase
+  // 1. Look up wallet address for this kasmail username
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('wallet_address')
     .eq('username', username)
     .single()
 
-  if (!profile?.wallet_address) {
+  if (profileError || !profile?.wallet_address) {
     throw new Error(`No KasMail account found for ${to}.`)
   }
 
-  // Call rapid-worker (creates outgoing record + audit trail)
-  const res = await fetch(SEND_FN_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-      'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY as string,
-    },
-    body: JSON.stringify({ from: 'verify@kasmail.org', to, subject, text: body }),
-  })
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    throw new Error(err.error || err.details || `HTTP ${res.status}`)
-  }
-
-  // The rapid-worker creates the inbox copy with an empty body — fix it by
-  // finding that record and updating it with the real content.
-  const { data: broken } = await supabase
+  // 2. Insert directly into emails table — lands straight in their inbox
+  const { error: insertError } = await supabase
     .from('emails')
-    .select('id')
-    .eq('from_wallet', 'external:verify@kasmail.org')
-    .eq('to_wallet', profile.wallet_address)
-    .eq('body', '(No content)')
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle()
+    .insert({
+      from_wallet: 'system:kasparty-forums',
+      to_wallet: profile.wallet_address,
+      subject,
+      body,
+      read: false,
+    })
 
-  if (broken?.id) {
-    await supabase
-      .from('emails')
-      .update({ body })
-      .eq('id', broken.id)
+  if (insertError) {
+    throw new Error(`Failed to deliver verification email: ${insertError.message}`)
   }
 }
 
