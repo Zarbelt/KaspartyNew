@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { MessageSquare, ChevronRight, ThumbsUp, Eye, Clock, Pin, Tag, Search, Plus, ArrowLeft, Send, User, Flame, Mail, LogIn, LogOut, CheckCircle, AlertCircle, ExternalLink, Loader2 } from 'lucide-react'
+import { MessageSquare, ChevronRight, Clock, Pin, Tag, Search, Plus, ArrowLeft, Send, User, Flame, Mail, LogIn, LogOut, CheckCircle, AlertCircle, ExternalLink, Loader2 } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 
 // ─── Supabase (same project as KasMail) ──────────────────────────────────
@@ -70,12 +70,12 @@ function clearSession() { localStorage.removeItem(SESSION_KEY) }
 // ─── Data types ───────────────────────────────────────────────────────────
 interface Post {
   id: number; title: string; author: string; authorShort: string
-  content: string; replies: Reply[]; views: number; likes: number
+  content: string; replies: Reply[]
   createdAt: string; pinned?: boolean; tags: string[]
 }
 interface Reply {
   id: number; author: string; authorShort: string
-  content: string; createdAt: string; likes: number
+  content: string; createdAt: string
 }
 interface Category {
   id: string; name: string; description: string
@@ -93,21 +93,21 @@ const INITIAL_CATEGORIES: Category[] = [
         author: 'kaspa:qz3xr...7f2k', authorShort: 'qz3x',
         content: `Welcome to the official Kasparty community forums! This is your place to discuss everything Kaspa, share token discoveries, post upcoming events, and connect with the community.\n\nA few ground rules:\n- Be respectful and constructive\n- No spam or self-promotion without community value\n- DYOR — nothing here is financial advice\n- Have fun and support the KAS ecosystem!\n\nHappy posting 🚀`,
         replies: [
-          { id: 1, author: 'kaspa:qp9mn...3a1b', authorShort: 'qp9m', content: 'Awesome to see forums added! This is exactly what the community needed.', createdAt: '2026-03-25T10:30:00Z', likes: 12 },
-          { id: 2, author: 'kaspa:qr7ks...8d4c', authorShort: 'qr7k', content: "Let's get the discussions going. Kaspa to the moon 🌕", createdAt: '2026-03-25T11:45:00Z', likes: 8 },
+          { id: 1, author: 'kaspa:qp9mn...3a1b', authorShort: 'qp9m', content: 'Awesome to see forums added! This is exactly what the community needed.', createdAt: '2026-03-25T10:30:00Z' },
+          { id: 2, author: 'kaspa:qr7ks...8d4c', authorShort: 'qr7k', content: "Let's get the discussions going. Kaspa to the moon 🌕", createdAt: '2026-03-25T11:45:00Z' },
         ],
-        views: 312, likes: 47, createdAt: '2026-03-24T09:00:00Z', pinned: true, tags: ['announcement', 'welcome'],
+        createdAt: '2026-03-24T09:00:00Z', pinned: true, tags: ['announcement', 'welcome'],
       },
       {
         id: 2, title: 'What got you into Kaspa? Share your story',
         author: 'kaspa:qm5xt...2p9w', authorShort: 'qm5x',
         content: 'Curious to hear how everyone found their way into the KAS ecosystem. Was it the tech? The community? A specific token launch? Drop your story below 👇',
         replies: [
-          { id: 1, author: 'kaspa:qn2fs...6r3e', authorShort: 'qn2f', content: 'Found it through a Reddit post about GHOSTDAG. The tech immediately blew my mind — blockDAG was a genuinely new idea.', createdAt: '2026-03-26T08:10:00Z', likes: 15 },
-          { id: 2, author: 'kaspa:qk8vl...1j7y', authorShort: 'qk8v', content: 'Honestly? Someone in a Telegram group mentioned it and I spent 3 days going down the rabbit hole. Never looked back.', createdAt: '2026-03-26T09:22:00Z', likes: 9 },
-          { id: 3, author: 'kaspa:qt4bp...5m2d', authorShort: 'qt4b', content: 'Mining! Started mining KAS early and stayed for the community.', createdAt: '2026-03-26T12:05:00Z', likes: 6 },
+          { id: 1, author: 'kaspa:qn2fs...6r3e', authorShort: 'qn2f', content: 'Found it through a Reddit post about GHOSTDAG. The tech immediately blew my mind — blockDAG was a genuinely new idea.', createdAt: '2026-03-26T08:10:00Z' },
+          { id: 2, author: 'kaspa:qk8vl...1j7y', authorShort: 'qk8v', content: 'Honestly? Someone in a Telegram group mentioned it and I spent 3 days going down the rabbit hole. Never looked back.', createdAt: '2026-03-26T09:22:00Z' },
+          { id: 3, author: 'kaspa:qt4bp...5m2d', authorShort: 'qt4b', content: 'Mining! Started mining KAS early and stayed for the community.', createdAt: '2026-03-26T12:05:00Z' },
         ],
-        views: 189, likes: 31, createdAt: '2026-03-26T07:00:00Z', tags: ['community', 'introductions'],
+        createdAt: '2026-03-26T07:00:00Z', tags: ['community', 'introductions'],
       },
     ],
   },
@@ -121,19 +121,19 @@ const INITIAL_CATEGORIES: Category[] = [
         author: 'kaspa:qd6yw...9c5a', authorShort: 'qd6y',
         content: `With so many new KRC-20 tokens launching every week, it's easy to get caught up in the hype. Here's my personal checklist:\n\n1. **Check the mint supply** — Is most of the supply already minted by insiders?\n2. **Holder distribution** — Are the top 10 wallets holding >50%? Red flag.\n3. **Community activity** — Is there a real Telegram/Discord or just bots?\n4. **Use case** — Does it solve something or is it pure speculation?\n5. **Dev transparency** — Are the devs known or anonymous with no track record?\n\nNone of this is financial advice. DYOR always.`,
         replies: [
-          { id: 1, author: 'kaspa:qh1ct...4v8x', authorShort: 'qh1c', content: "Great list. I'd add: check how long the mint phase lasted. Tokens that minted out in under an hour often have very uneven distribution.", createdAt: '2026-03-25T15:00:00Z', likes: 22 },
-          { id: 2, author: 'kaspa:qj9rs...7b2f', authorShort: 'qj9r', content: 'Also look at whether liquidity is locked. Unlocked LP is a major rug risk.', createdAt: '2026-03-25T16:30:00Z', likes: 18 },
+          { id: 1, author: 'kaspa:qh1ct...4v8x', authorShort: 'qh1c', content: "Great list. I'd add: check how long the mint phase lasted. Tokens that minted out in under an hour often have very uneven distribution.", createdAt: '2026-03-25T15:00:00Z' },
+          { id: 2, author: 'kaspa:qj9rs...7b2f', authorShort: 'qj9r', content: 'Also look at whether liquidity is locked. Unlocked LP is a major rug risk.', createdAt: '2026-03-25T16:30:00Z' },
         ],
-        views: 445, likes: 62, createdAt: '2026-03-25T14:00:00Z', pinned: true, tags: ['dyor', 'krc20', 'guide'],
+        createdAt: '2026-03-25T14:00:00Z', pinned: true, tags: ['dyor', 'krc20', 'guide'],
       },
       {
         id: 4, title: 'Which KRC-20 tokens are you watching this week?',
         author: 'kaspa:ql3vz...8e1b', authorShort: 'ql3v',
         content: "Weekly thread — drop your watchlist tokens and why you're watching them. Not financial advice, just community discussion!",
         replies: [
-          { id: 1, author: 'kaspa:qo7mx...2a4c', authorShort: 'qo7m', content: 'Watching KANGO and NACHO closely. Both have active devs and real community engagement.', createdAt: '2026-03-27T10:00:00Z', likes: 7 },
+          { id: 1, author: 'kaspa:qo7mx...2a4c', authorShort: 'qo7m', content: 'Watching KANGO and NACHO closely. Both have active devs and real community engagement.', createdAt: '2026-03-27T10:00:00Z' },
         ],
-        views: 203, likes: 28, createdAt: '2026-03-27T09:00:00Z', tags: ['watchlist', 'weekly'],
+        createdAt: '2026-03-27T09:00:00Z', tags: ['watchlist', 'weekly'],
       },
     ],
   },
@@ -147,11 +147,11 @@ const INITIAL_CATEGORIES: Category[] = [
         author: 'kaspa:qz3xr...7f2k', authorShort: 'qz3x',
         content: "We're hosting a community AMA next Saturday! Drop your questions in the replies and we'll answer the top-voted ones live.\n\nTopics we can cover:\n- Roadmap updates\n- Chat & Forums features\n- Token leaderboard mechanics\n- Community governance plans\n\nUpvote the questions you want answered most!",
         replies: [
-          { id: 1, author: 'kaspa:qw2nt...6k9s', authorShort: 'qw2n', content: 'Q: Will there be wallet-gated event tickets on Kasparty?', createdAt: '2026-03-26T14:00:00Z', likes: 34 },
-          { id: 2, author: 'kaspa:qe5pv...3m7r', authorShort: 'qe5p', content: 'Q: Any plans for a Kasparty mobile app?', createdAt: '2026-03-26T15:30:00Z', likes: 27 },
-          { id: 3, author: 'kaspa:qi8lk...1d6t', authorShort: 'qi8l', content: 'Q: How is the 1 KAS minimum working out for preventing spam?', createdAt: '2026-03-26T17:00:00Z', likes: 19 },
+          { id: 1, author: 'kaspa:qw2nt...6k9s', authorShort: 'qw2n', content: 'Q: Will there be wallet-gated event tickets on Kasparty?', createdAt: '2026-03-26T14:00:00Z' },
+          { id: 2, author: 'kaspa:qe5pv...3m7r', authorShort: 'qe5p', content: 'Q: Any plans for a Kasparty mobile app?', createdAt: '2026-03-26T15:30:00Z' },
+          { id: 3, author: 'kaspa:qi8lk...1d6t', authorShort: 'qi8l', content: 'Q: How is the 1 KAS minimum working out for preventing spam?', createdAt: '2026-03-26T17:00:00Z' },
         ],
-        views: 578, likes: 89, createdAt: '2026-03-26T12:00:00Z', pinned: true, tags: ['ama', 'official', 'community'],
+        createdAt: '2026-03-26T12:00:00Z', pinned: true, tags: ['ama', 'official', 'community'],
       },
     ],
   },
@@ -165,9 +165,9 @@ const INITIAL_CATEGORIES: Category[] = [
         author: 'kaspa:qa1uc...5h8j', authorShort: 'qa1u',
         content: `Compiling the best resources for devs getting into the Kaspa ecosystem:\n\n**Official**\n- kaspa.org — Main site\n- github.com/kaspanet — Core repos\n- docs.kas.pa — Developer docs\n\n**Community**\n- KRC-20 API: krc20.kaspa.org\n- Kaspa REST API: api.kaspa.org\n\n**SDKs**\n- kaspa-wasm (Rust → WASM): github.com/kaspanet/rusty-kaspa\n- kaspa-js: community maintained\n\nAdd anything I've missed below!`,
         replies: [
-          { id: 1, author: 'kaspa:qb4gh...2n1p', authorShort: 'qb4g', content: 'Great list! Also worth checking the #dev channel in the official Kaspa Discord.', createdAt: '2026-03-24T16:00:00Z', likes: 11 },
+          { id: 1, author: 'kaspa:qb4gh...2n1p', authorShort: 'qb4g', content: 'Great list! Also worth checking the #dev channel in the official Kaspa Discord.', createdAt: '2026-03-24T16:00:00Z' },
         ],
-        views: 267, likes: 38, createdAt: '2026-03-24T15:00:00Z', pinned: true, tags: ['resources', 'development', 'guide'],
+        createdAt: '2026-03-24T15:00:00Z', pinned: true, tags: ['resources', 'development', 'guide'],
       },
     ],
   },
@@ -186,9 +186,6 @@ export default function Forums() {
   const [newPostTitle, setNewPostTitle] = useState('')
   const [newPostContent, setNewPostContent] = useState('')
   const [newPostTag, setNewPostTag] = useState('')
-  const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set())
-  const [likedReplies, setLikedReplies] = useState<Set<number>>(new Set())
-
   // Auth
   const [currentUser, setCurrentUser] = useState<ForumUser | null>(null)
   const [authView, setAuthView] = useState<AuthView>('none')
@@ -222,27 +219,13 @@ export default function Forums() {
     return `${Math.floor(diff / 86400)}d ago`
   }
 
-  const handleLikePost = (postId: number) => {
-    if (likedPosts.has(postId)) return
-    setLikedPosts(prev => new Set([...prev, postId]))
-    setCategories(prev => prev.map(cat => ({ ...cat, posts: cat.posts.map(p => p.id === postId ? { ...p, likes: p.likes + 1 } : p) })))
-    if (selectedPost?.id === postId) setSelectedPost(prev => prev ? { ...prev, likes: prev.likes + 1 } : prev)
-  }
-
-  const handleLikeReply = (postId: number, replyId: number) => {
-    if (likedReplies.has(replyId)) return
-    setLikedReplies(prev => new Set([...prev, replyId]))
-    setCategories(prev => prev.map(cat => ({ ...cat, posts: cat.posts.map(p => p.id === postId ? { ...p, replies: p.replies.map(r => r.id === replyId ? { ...r, likes: r.likes + 1 } : r) } : p) })))
-    if (selectedPost?.id === postId) setSelectedPost(prev => prev ? { ...prev, replies: prev.replies.map(r => r.id === replyId ? { ...r, likes: r.likes + 1 } : r) } : prev)
-  }
-
   const handleSubmitReply = () => {
     if (!replyText.trim() || !selectedPost || !selectedCategory) return
     const newReply: Reply = {
       id: Date.now(),
       author: currentUser ? `${currentUser.kasmail_username}@kasmail.org` : 'anonymous',
       authorShort: currentUser ? currentUser.kasmail_username.slice(0, 4) : 'anon',
-      content: replyText.trim(), createdAt: new Date().toISOString(), likes: 0,
+      content: replyText.trim(), createdAt: new Date().toISOString(),
     }
     const updatedPost = { ...selectedPost, replies: [...selectedPost.replies, newReply] }
     setSelectedPost(updatedPost)
@@ -257,7 +240,7 @@ export default function Forums() {
       title: newPostTitle.trim(),
       author: currentUser ? `${currentUser.kasmail_username}@kasmail.org` : 'anonymous',
       authorShort: currentUser ? currentUser.kasmail_username.slice(0, 4) : 'anon',
-      content: newPostContent.trim(), replies: [], views: 1, likes: 0,
+      content: newPostContent.trim(), replies: [],
       createdAt: new Date().toISOString(),
       tags: newPostTag.trim() ? [newPostTag.trim().toLowerCase()] : [],
     }
@@ -762,8 +745,6 @@ export default function Forums() {
                     <div className="flex items-center gap-4 mt-3 text-xs text-gray-400 dark:text-gray-500">
                       <span className="flex items-center gap-1"><User size={12} />{post.authorShort}</span>
                       <span className="flex items-center gap-1"><Clock size={12} />{formatDate(post.createdAt)}</span>
-                      <span className="flex items-center gap-1"><Eye size={12} />{post.views}</span>
-                      <span className="flex items-center gap-1"><ThumbsUp size={12} />{post.likes}</span>
                       <span className="flex items-center gap-1 text-kasgreen font-semibold"><MessageSquare size={12} />{post.replies.length} replies</span>
                     </div>
                   </div>
@@ -804,15 +785,8 @@ export default function Forums() {
                 <div className="text-sm font-semibold text-gray-900 dark:text-white">{selectedPost.author}</div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">{formatDate(selectedPost.createdAt)}</div>
               </div>
-              <div className="ml-auto text-sm text-gray-500 dark:text-gray-400">
-                <span className="flex items-center gap-1"><Eye size={14} />{selectedPost.views}</span>
-              </div>
             </div>
-            <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line mb-6">{selectedPost.content}</div>
-            <button onClick={() => handleLikePost(selectedPost.id)}
-              className={`flex items-center gap-2 text-sm px-4 py-2 rounded-xl transition font-medium ${likedPosts.has(selectedPost.id) ? 'bg-kasgreen/10 text-kasgreen' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-kasgreen/10 hover:text-kasgreen'}`}>
-              <ThumbsUp size={15} /> {selectedPost.likes} {likedPosts.has(selectedPost.id) ? 'Liked' : 'Like'}
-            </button>
+            <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">{selectedPost.content}</div>
           </div>
 
           <div className="mb-4">
@@ -832,10 +806,6 @@ export default function Forums() {
                     </div>
                   </div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{reply.content}</p>
-                  <button onClick={() => handleLikeReply(selectedPost.id, reply.id)}
-                    className={`mt-3 flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg transition font-medium ${likedReplies.has(reply.id) ? 'bg-kasgreen/10 text-kasgreen' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-kasgreen/10 hover:text-kasgreen'}`}>
-                    <ThumbsUp size={12} /> {reply.likes}
-                  </button>
                 </div>
               ))}
             </div>
