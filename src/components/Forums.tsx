@@ -18,6 +18,9 @@ async function sendVerificationEmail(to: string, code: string, type: 'register' 
   const text = type === 'login'
     ? `Your Kasparty sign-in code is: ${code}\n\nExpires in 10 minutes. Do not share it.`
     : `Your Kasparty verification code is: ${code}\n\nExpires in 10 minutes. Do not share it.`
+  const html = type === 'login'
+    ? `<p>Your Kasparty sign-in code is:</p><h2 style="letter-spacing:4px;font-family:monospace">${code}</h2><p>Expires in 10 minutes. Do not share it.</p>`
+    : `<p>Your Kasparty verification code is:</p><h2 style="letter-spacing:4px;font-family:monospace">${code}</h2><p>Expires in 10 minutes. Do not share it.</p>`
 
   const res = await fetch(SEND_FN_URL, {
     method: 'POST',
@@ -26,7 +29,7 @@ async function sendVerificationEmail(to: string, code: string, type: 'register' 
       'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
       'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY as string,
     },
-    body: JSON.stringify({ from: 'verify@kasmail.org', to, subject, text }),
+    body: JSON.stringify({ from: 'verify@kasmail.org', to, subject, text, html }),
   })
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))
