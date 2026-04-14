@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.\\(tsx|ts|css\\)$\")",
+      "Bash(npm install:*)",
+      "Bash(where node:*)",
+      "Bash(ls /c/Users/Hp/AppData/Roaming/npm/)"
+    ]
+  }
+}
