@@ -8,7 +8,7 @@ import ChatWidget from './components/ChatWidget'
 import Footer from './components/Footer'
 import ForumsPage from './pages/ForumsPage'
 
-// ── Lightweight client-side router (no extra packages needed) ──────────────
+// ── Lightweight  client-side router (no extra packages needed) ──────────────
 export type Page = 'home' | 'forums'
 
 interface RouterCtx {
