@@ -52,17 +52,17 @@ export default function Events() {
       title: "DAG KNIGHT Consensus Upgrade",
       description:
         "Implementation of DAG KNIGHT consensus algorithm for enhanced security and decentralization.",
-      date: "July 2025",
+      date: "2026",
       status: "completed",
       highlight: false,
       tags: ["Consensus", "Security", "DAG"],
       icon: "🛡️",
     },
     {
-      title: "Kaspa DeFi Ecosystem Launch",
+      title: "Kaspa Toccata Upgrade",
       description:
-        "First wave of DeFi protocols including DEX, lending platforms, and yield farming opportunities.",
-      date: "December 2025",
+        "The foundational infrastructure for vProg Smart Contracts on Kaspa- Introduces Kaspa Covenants, .",
+      date: "Q3 2026",
       status: "upcoming",
       highlight: true,
       tags: ["DeFi", "DEX", "Yield"],
